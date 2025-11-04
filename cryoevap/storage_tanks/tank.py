@@ -47,7 +47,8 @@ class Tank:
         self.data = {'Time':[], 'Tv_avg': [], 'rho_V_avg': [],
                     'Q_VL': [],'Q_L': [], 'Q_V': [],
                     'V_L': [], 'B_L': [], 'BOG': [],
-                    'drho_V_avg': [], 'dV_L': []}
+                    'drho_V_avg': [], 'dV_L': [],
+                    'k_V_vector': []}
         pass
 
     def set_HeatTransProps(self, U_L, U_V, T_air, Q_b_fixed=None, Q_roof=0, eta_w = 0):
@@ -407,6 +408,8 @@ class Tank:
             # Update vapour thermal conductivity
             self.cryogen.update_k_V(self.z_grid, T_v)
             
+            self.data['k_V_vector'].append(self.cryogen.k_V_nuevo)
+
             # Calculate vapour temperature gradient from the vapour length
             # at the desired timestep
             dz = (self.z_grid[1] - self.z_grid[0])* ((self.l - l_L[i]))

@@ -102,7 +102,7 @@ class Cryogen:
         '''
         # Shift temperature 1e-3 K to avoid CoolProp non convergence
         T_V_shift = np.copy(T_V)
-        T_V_shift[0] = T_V_shift[0] + 1e-3
+        T_V_shift = T_V_shift + 1e-3
 
         # Compute vapour density field
         rho_V = CP.PropsSI('D','P', self.P,'T',T_V_shift, self.name)
@@ -129,7 +129,7 @@ class Cryogen:
 
         # Shift temperature 1e-3 K to avoid CoolProp non convergence
         T_V_shift = np.copy(T_V)
-        T_V_shift[0] = T_V_shift[0] + 1e-3
+        T_V_shift = T_V_shift + 1e-3
 
         k_V = CP.PropsSI('L','P',self.P,'T',T_V_shift, self.name)
 
@@ -140,7 +140,7 @@ class Cryogen:
 
         # Update average conductividad (?)
         
-        self.k_V_avg = simpson(k_V, x = z_grid)
+        #self.k_V_avg = simpson(k_V, x = z_grid)
     
         ##################
 
@@ -162,7 +162,7 @@ class Cryogen:
         
         # Shift temperature 1e-3 K to avoid CoolProp non convergence
         T_V_shift = np.copy(T_V)
-        T_V_shift[0] = T_V_shift[0] + 1e-3
+        T_V_shift = T_V_shift + 1e-3
 
         # Compute vapour specific heat capacity field
         cp_V = CP.PropsSI('C','P',self.P,'T',T_V_shift, self.name)

@@ -41,12 +41,26 @@ mid_tank.time_interval = 60 # Time-step to record data
 mid_tank.plot_interval = evap_time/6 # Interval to plot vapour temperature profiles
 mid_tank.evaporate(evap_time) # Simulate the evaporation
 
+print("--- ANÁLISIS DE CONDUCTIVIDAD TÉRMICA (k) ---")
+
+# 'k_V_vector' es una lista de vectores. 
+# Imprimamos el número de vectores guardados (debe coincidir con los pasos de tiempo)
+print(f"Total de vectores 'k' guardados: {len(mid_tank.data['k_V_vector'])}")
+
+# Imprime el PRIMER vector 'k' (al inicio de la simulación, t=0)
+print("\nVector 'k' en t=0 (vapor frío):")
+print(mid_tank.data['k_V_vector'][0])
+
+# Imprime el ÚLTIMO vector 'k' (al final de la simulación)
+print("\nVector 'k' al final (vapor caliente):")
+print(mid_tank.data['k_V_vector'][-1])
+
 # Step 5: Visualisation
 mid_tank.plot_tv(t_unit="h") # Vapour temperature
 #plt.savefig("temp_vap.png", bbox_inches = 'tight')
-mid_tank.plot_Q( unit="W", t_unit="h") # Heat transfer rates
+#mid_tank.plot_Q( unit="W", t_unit="h") # Heat transfer rates
 #plt.savefig("Q_plots.png", bbox_inches = 'tight')
-mid_tank.plot_V_L(unit="L", t_unit="min") # Liquid volume
+#mid_tank.plot_V_L(unit="L", t_unit="min") # Liquid volume
 #plt.savefig("V_L.png", bbox_inches = 'tight')
 mid_tank.plot_BOG(unit='g/h', t_unit="min") # Boil-off gas and evaporation 
 #plt.savefig("BOG.png", bbox_inches = 'tight')
