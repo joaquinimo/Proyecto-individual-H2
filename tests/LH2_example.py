@@ -43,10 +43,12 @@ mid_tank.evaporate(evap_time) # Simulate the evaporation
 
 # Step 5: Visualisation
 mid_tank.plot_tv(t_unit="h") # Vapour temperature
-plt.savefig("temp_vap.png", bbox_inches = 'tight')
+#plt.savefig("temp_vap.png", bbox_inches = 'tight')
 mid_tank.plot_Q( unit="W", t_unit="h") # Heat transfer rates
-plt.savefig("Q_plots.png", bbox_inches = 'tight')
+#plt.savefig("Q_plots.png", bbox_inches = 'tight')
 mid_tank.plot_V_L(unit="L", t_unit="min") # Liquid volume
-plt.savefig("V_L.png", bbox_inches = 'tight')
+#plt.savefig("V_L.png", bbox_inches = 'tight')
 mid_tank.plot_BOG(unit='g/h', t_unit="min") # Boil-off gas and evaporation 
-plt.savefig("BOG.png", bbox_inches = 'tight')
+#plt.savefig("BOG.png", bbox_inches = 'tight')
+
+plt.show()

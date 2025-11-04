@@ -174,8 +174,11 @@ class Tank:
         # Interface velocity
         v_int = v_z * (self.cryogen.rho_V_avg/self.cryogen.rho_L)
 
-        # Vapour thermal diffusivity
-        alpha = self.cryogen.k_V_avg/(self.cryogen.rho_V_avg*self.cryogen.cp_V_avg) 
+######################################################################################
+        # Vapour thermal diffusivity 
+        #  AHORA ALFA NO CORRESPONDE A ESTO DADO K_V(T) y nuevo despeje
+        #alpha = self.cryogen.k_V_avg/(self.cryogen.rho_V_avg*self.cryogen.cp_V_avg) 
+######################################################################################
 
         # Uniform spacing
         dz = (self.z_grid[1] - self.z_grid[0])*L_dry
@@ -186,19 +189,49 @@ class Tank:
         # Initialise temperature change vector
         dT = np.zeros(n) 
 
+######################################################################################
+        #NUEVO K_V DADO CRYOGEN.PY 
+        k_nuevo = self.cryogen.k_V_nuevo # casi lo mismo que cryogen con el nuevo kv que considera cada término 
+######################################################################################
+
+
         # Compute the differences
         dT_dz = (T[1:-1] - T[:-2]) / dz
 
         # Compute the second derivatives
         d2T_dz2 = (T[:-2] - 2*T[1:-1] + T[2:]) / dz**2
 
+######################################################################################
+        #aqui agregó las derivadas similares para k_v como las de dtdz
+        dk_dz = (k_nuevo[1:-1] - k_nuevo[:-2]) / dz
+#####################################################################################
+
+
+
         # Compute the wall heating considering the wall heat partitioning.
         # (1-eta_w) is the fraction of the external vapour heat ingress
         # that is transferred in the vapour 
         S_wall = (4*self.U_V*self.d_o/self.d_i**2) * (self.T_air - T[1:-1]) * (1-self.eta_w)
 
+
+######################################################################################
+
+        # alfa nuevo "" solo para los promedios de las que no cambian
+        alpha_nuevo = 1/(self.cryogen.rho_V_avg*self.cryogen.cp_V_avg)
+
+        dT[1:-1] = alpha_nuevo * (k_nuevo[1:-1] * d2T_dz2) - (v_z-v_int)* dT_dz + alpha_nuevo* (dk_dz * dT_dz) + alpha_nuevo * S_wall 
+        #1term termino de la derivada de kv * dtdz #2term prveniente del otro lado #3term expansión de la dkdt ## smiliar a como estaba antes pero agregando k variable
+          
+        #antigua ecuación para comparar, de igual manera la dejé en donde estaba más abajo como parte del original
+        #dT[1:-1] = alpha*d2T_dz2 - (v_z-v_int) * dT_dz + (alpha/self.cryogen.k_V_avg) * S_wall
+
+######################################################################################
+
+
+
+
         # Update dT
-        dT[1:-1] = alpha*d2T_dz2 - (v_z-v_int) * dT_dz + (alpha/self.cryogen.k_V_avg) * S_wall
+        #dT[1:-1] = alpha*d2T_dz2 - (v_z-v_int) * dT_dz + (alpha/self.cryogen.k_V_avg) * S_wall
 
         # DIFFERENTIAL BOUNDARY CONDITIONS
         # In the vapour-liquid interface the

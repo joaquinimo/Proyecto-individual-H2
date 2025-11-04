@@ -137,9 +137,17 @@ class Cryogen:
         if np.any(np.isnan(k_V)) or np.any(np.isinf(k_V)):
             return
 
-        # Update average vapour density
+
+        # Update average conductividad (?)
+        
         self.k_V_avg = simpson(k_V, x = z_grid)
     
+        ##################
+
+        self.k_V_nuevo = k_V
+
+        ##################
+
     def update_cp_V(self, z_grid, T_V):
         '''
         Update vapour specific heat capacity
