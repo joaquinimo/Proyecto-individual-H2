@@ -192,7 +192,7 @@ class Tank:
 
 ######################################################################################
         #NUEVO K_V DADO CRYOGEN.PY 
-        k_nuevo = self.cryogen.k_V_nuevo # casi lo mismo que cryogen con el nuevo kv que considera cada término 
+        k_nuevo = self.cryogen.k_V_nuevo *0.5 # casi lo mismo que cryogen con el nuevo kv que considera cada término 
 ######################################################################################
 
 

@@ -102,7 +102,7 @@ class Cryogen:
         '''
         # Shift temperature 1e-3 K to avoid CoolProp non convergence
         T_V_shift = np.copy(T_V)
-        T_V_shift = T_V_shift + 1e-3
+        T_V_shift = T_V_shift + 1e-3 
 
         # Compute vapour density field
         rho_V = CP.PropsSI('D','P', self.P,'T',T_V_shift, self.name)

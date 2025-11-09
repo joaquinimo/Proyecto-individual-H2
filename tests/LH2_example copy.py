@@ -13,20 +13,20 @@ T_air = 293.15 		# Temperature of the environment K
 U_L = 3.73e-3 		# Liquid overall heat transfer coefficient W/m^2/K
 U_V = 3.73e-3 		# Vapour overall heat transfer coefficient W/m^2/K
 Q_b = 100 		    # Heat transfer rate at the bottom / W
-V_tank = 2033 	# Tank volume / m^3
+V_tank = 2033   	# Tank volume / m^3
 LF = 0.50     		# Initial liquid filling / -
 P = 101325  		# Tank operating pressure / Pa
 mid_tank = Tank(d_i, d_o, V_tank, LF) # Initialize mid-scale tank
 mid_tank.set_HeatTransProps(U_L, U_V, T_air, Q_b, Q_roof, eta_w= 0.8)
 
 # Step 3: Initialise cryogen
-hydrogen = Cryogen(name = "hydrogen")
-hydrogen.set_coolprops(P)
-mid_tank.cryogen = hydrogen
+methane = Cryogen(name = "methane")
+methane.set_coolprops(P)
+mid_tank.cryogen = methane
 
 # Step 4: Simulation setup
 # Calculate initial evaporation rate
-print("The initial evaporation rate of " + hydrogen.name + " is %.1f kg/h" % (mid_tank.b_l_dot * 3600)) 
+print("The initial evaporation rate of " + methane.name + " is %.1f kg/h" % (mid_tank.b_l_dot * 3600)) 
 # Estimate transient period duration
 print("Transient period = %.3f s " % mid_tank.tau)
 # Minimum number of hours to achieve steady state 
