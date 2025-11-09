@@ -33,7 +33,7 @@ class Tank:
         self.cryogen = Cryogen()  # Empty Cryogen, see Cryogen class
 
         # Simulation control
-
+        #self.constant_thermalconduct  = 'True'                  ## que sea el switch de un True/False otra inicialización 
         # Initialise dimensionless grid with 100 nodes as default
         self.z_grid = np.linspace(0, 1, 100)
 
@@ -108,8 +108,8 @@ class Tank:
         dz = self.z_grid[1] - self.z_grid[0]
 
         # Robin BC initial condition
-        Tv_0[-1] = ((2 * self.U_roof * (1-self.eta_w) * dz * self.T_air/self.cryogen.k_V_avg +
-                    4 * Tv_0[-2] - Tv_0[-3])/(3 + 2 * self.U_roof * (1-self.eta_w) * dz * self.cryogen.k_V_avg))
+        Tv_0[-1] = ((2 * self.U_roof * (1-self.eta_w) * dz * self.T_air/self.cryogen.k_V_nuevo +
+                    4 * Tv_0[-2] - Tv_0[-3])/(3 + 2 * self.U_roof * (1-self.eta_w) * dz * self.cryogen.k_V_nuevo)) #### cambiar ####
 
         # Concatenate initial conditions in a single vector
         IC = np.append(VL_0, Tv_0)
@@ -287,7 +287,7 @@ class Tank:
         dz = (self.z_grid[1] - self.z_grid[0])*self.l_V
         dTdz_i = (-3 * T_V[0] + 4 * T_V[1] - T_V[2])/(2*dz)
         
-        return self.cryogen.k_V_avg * self.A_T * dTdz_i
+        return self.cryogen.k_V_nuevo * self.A_T * dTdz_i
     
     # Plotting routines
     def plot_tv(self, t_unit='s'):
@@ -416,7 +416,7 @@ class Tank:
             dTdz_i = (-3 * T_v[0] + 4 * T_v[1] - T_v[2])/(2*dz)    
             
             # Append Q_VL calculated using the Fourier's law
-            Q_VL.append(self.cryogen.k_V_avg * self.A_T * dTdz_i)
+            Q_VL.append(self.cryogen.k_V_nuevo * self.A_T * dTdz_i)
 
             # Average vapour temperature
             Tv_avg.append(simpson(T_v, x = self.z_grid))
