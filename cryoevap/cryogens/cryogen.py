@@ -83,7 +83,7 @@ class Cryogen:
         self.k_V = CP.PropsSI('L','P',p,'Q',1,fluid)  # Thermal conductivity of the vapour W/mK
         self.k_int = self.k_V  # Thermal conductivity at the vapour-liquid interface
         self.k_V_nuevo = self.k_V # Initialise average thermal conductivity
-        self.k_k_V_avg = self.k_V # Initialise average thermal conductivity
+        self.k_V_avg = self.k_V # Initialise average thermal conductivity
 
         self.cp_V = CP.PropsSI('C','P',p,'Q',1,fluid)  # Heat capacity at constant pressure / J/kg/K
         self.cp_L = CP.PropsSI('C','P',p,'Q',0,fluid)  # Heat capacity at constant pressure / J/kg/K
