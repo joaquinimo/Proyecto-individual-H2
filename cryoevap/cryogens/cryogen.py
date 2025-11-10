@@ -43,7 +43,7 @@ class Cryogen:
         self.k_int = k_V  # Thermal conductivity at the vapour-liquid interface
         self.cp_V = cp_V  # Heat capacity at constant pressure / J/kg/K
         self.MW = MW
-
+        self.k_V_nuevo = k_V
     def rho_ig(self, T=None, P=None):
         """Returns ideal gas density in kg/m^3"""
         if P is None:  # Don't ask for P on isobaric conditions
@@ -130,10 +130,10 @@ class Cryogen:
 
         # Shift temperature 1e-3 K to avoid CoolProp non convergence
         T_V_shift = np.copy(T_V)
-        T_V_shift = T_V_shift + 1e-3
+        T_V_shift = T_V_shift + 1e-3 ###
 
         k_V = CP.PropsSI('L','P',self.P,'T',T_V_shift, self.name)
-
+        
         # Update properties  if calling CoolProp was successful
         if np.any(np.isnan(k_V)) or np.any(np.isinf(k_V)):
             return
@@ -172,4 +172,3 @@ class Cryogen:
         if np.any(np.isnan(cp_V)) or np.any(np.isinf(cp_V)):
             return
         self.cp_V_avg = simpson(cp_V, x = z_grid)
-

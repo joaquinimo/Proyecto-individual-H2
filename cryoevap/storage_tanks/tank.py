@@ -51,7 +51,7 @@ class Tank:
                     'k_V_vector': []}
         pass
 
-    def set_HeatTransProps(self, U_L, U_V, T_air, Q_b_fixed=None, Q_roof=0, eta_w = 0):
+    def set_HeatTransProps(self, U_L, U_V, T_air, Q_b_fixed=None, Q_roof=0, eta_w = 0, k_V_avg = True):
         """Set separately tank heat transfer properties
         
         Inputs:
@@ -68,7 +68,7 @@ class Tank:
         self.U_V = U_V 
         self.Q_roof = Q_roof  
         self.T_air = T_air 
-
+        self.k_V_avg = k_V_avg
         # The walls and roof materials are the same, hence, it is assumed
         # that their heat transfer coefficients are the same
         self.U_roof = U_V         
@@ -91,6 +91,7 @@ class Tank:
         
         # Convert initial vapour temperature in an array
         self.cryogen.T_V = self.cryogen.T_V * np.ones(len(self.z_grid))
+        self.cryogen.update_k_V(self.z_grid, self.cryogen.T_V)
 
         # Define time span to evaluate the solution
         t_eval = np.arange(0, t_f + 1, self.time_interval)
@@ -108,8 +109,8 @@ class Tank:
         dz = self.z_grid[1] - self.z_grid[0]
 
         # Robin BC initial condition
-        Tv_0[-1] = ((2 * self.U_roof * (1-self.eta_w) * dz * self.T_air/self.cryogen.k_V_nuevo +
-                    4 * Tv_0[-2] - Tv_0[-3])/(3 + 2 * self.U_roof * (1-self.eta_w) * dz * self.cryogen.k_V_nuevo)) #### cambiar ####
+        Tv_0[-1] = ((2 * self.U_roof * (1-self.eta_w) * dz * self.T_air/self.k_V[-1] +
+                    4 * Tv_0[-2] - Tv_0[-3])/(3 + 2 * self.U_roof * (1-self.eta_w) * dz * self.k_V[-1])) #### cambiar ####
 
         # Concatenate initial conditions in a single vector
         IC = np.append(VL_0, Tv_0)
@@ -192,7 +193,7 @@ class Tank:
 
 ######################################################################################
         #NUEVO K_V DADO CRYOGEN.PY 
-        k_nuevo = self.cryogen.k_V_nuevo # casi lo mismo que cryogen con el nuevo kv que considera cada término 
+        k_nuevo = self.k_V # casi lo mismo que cryogen con el nuevo kv que considera cada término 
 ######################################################################################
 
 
@@ -287,24 +288,12 @@ class Tank:
         dz = (self.z_grid[1] - self.z_grid[0])*self.l_V
         dTdz_i = (-3 * T_V[0] + 4 * T_V[1] - T_V[2])/(2*dz)
         
-        #return self.cryogen.k_V_nuevo * self.A_T * dTdz_i
-    ###############################################################
-        k_val = self.cryogen.k_V_nuevo 
-
-        # Si es un array, tomar solo el primer elemento (el de la interfaz z=0)
-        if isinstance(k_val, np.ndarray):
-            k_interface = k_val[0]
-        else:
-            k_interface = k_val # Sigue siendo un escalar
-
-        # k_interface es ahora garantizadamente un escalar
-        return k_interface * self.A_T * dTdz_i
+        return self.k_V[0] * self.A_T * dTdz_i
 
 
 
 
 
-    ###############################################################
     # Plotting routines
     def plot_tv(self, t_unit='s'):
         '''
@@ -422,25 +411,16 @@ class Tank:
             # Calculate and append Q_VL
 
             # Update vapour thermal conductivity
-            self.cryogen.update_k_V(self.z_grid, T_v)
+            self.cryogen.update_k_V(self.z_grid, T_v) #####################
             
-            self.data['k_V_vector'].append(self.cryogen.k_V_nuevo)
-
             # Calculate vapour temperature gradient from the vapour length
             # at the desired timestep
             dz = (self.z_grid[1] - self.z_grid[0])* ((self.l - l_L[i]))
             dTdz_i = (-3 * T_v[0] + 4 * T_v[1] - T_v[2])/(2*dz)    
             
-
-
-
             # Append Q_VL calculated using the Fourier's law
-            #Q_VL.append(self.cryogen.k_V_nuevo * self.A_T * dTdz_i)
-###################################################################
-            k_interface = self.cryogen.k_V_nuevo[0]
-            Q_VL.append(k_interface * self.A_T * dTdz_i)
+            Q_VL.append(self.k_V[0] * self.A_T * dTdz_i) ##############
 
-###################################################################
             # Average vapour temperature
             Tv_avg.append(simpson(T_v, x = self.z_grid))
 
@@ -592,3 +572,11 @@ class Tank:
         duration of the transient period
         of rapid vapour heating'''
         return 2 * self.l_V/self.v_z
+    
+    @property
+    def k_V(self):
+        if self.k_V_avg:
+            "If Q_b_fixed is not set, calculate"
+            return np.ones(len(self.z_grid)) * self.cryogen.k_V_avg
+        else:
+            return self.cryogen.k_V_nuevo

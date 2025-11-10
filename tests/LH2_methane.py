@@ -11,13 +11,13 @@ d_i = 8 	    	# Internal diameter / m
 d_o = 8.4   		# External diameter / m
 T_air = 293.15 		# Temperature of the environment K
 U_L = 3.73e-3 		# Liquid overall heat transfer coefficient W/m^2/K
-U_V = 3.73e-3 		# Vapour overall heat transfer coefficient W/m^2/K
+U_V = 1		# Vapour overall heat transfer coefficient W/m^2/K
 Q_b = 100 		    # Heat transfer rate at the bottom / W
 V_tank = 2033   	# Tank volume / m^3
 LF = 0.50     		# Initial liquid filling / -
 P = 101325  		# Tank operating pressure / Pa
 mid_tank = Tank(d_i, d_o, V_tank, LF) # Initialize mid-scale tank
-mid_tank.set_HeatTransProps(U_L, U_V, T_air, Q_b, Q_roof, eta_w= 0.8)
+mid_tank.set_HeatTransProps(U_L, U_V, T_air, Q_b, Q_roof, eta_w= 0.2)
 
 # Step 3: Initialise cryogen
 methane = Cryogen(name = "methane")
@@ -44,12 +44,12 @@ mid_tank.evaporate(evap_time) # Simulate the evaporation
 
 #verificación de valores de k
 #valores al inicio
-print(f"valores k = {len(mid_tank.data['k_V_vector'])}")
-print("\nvalores k en t0")
-print(mid_tank.data['k_V_vector'][0])
+#print(f"valores k = {len(mid_tank.data['k_V_vector'])}")
+#print("\nvalores k en t0")
+#print(mid_tank.data['k_V_vector'][0])
 #valores al final
-print("\nvalores k al final")
-print(mid_tank.data['k_V_vector'][-1])
+#print("\nvalores k al final")
+#print(mid_tank.data['k_V_vector'][-1])
 
 # Step 5: Visualisation
 mid_tank.plot_tv(t_unit="h") # Vapour temperature
