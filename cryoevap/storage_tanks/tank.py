@@ -431,9 +431,16 @@ class Tank:
             dz = (self.z_grid[1] - self.z_grid[0])* ((self.l - l_L[i]))
             dTdz_i = (-3 * T_v[0] + 4 * T_v[1] - T_v[2])/(2*dz)    
             
-            # Append Q_VL calculated using the Fourier's law
-            Q_VL.append(self.cryogen.k_V_nuevo * self.A_T * dTdz_i)
 
+
+
+            # Append Q_VL calculated using the Fourier's law
+            #Q_VL.append(self.cryogen.k_V_nuevo * self.A_T * dTdz_i)
+###################################################################
+            k_interface = self.cryogen.k_V_nuevo[0]
+            Q_VL.append(k_interface * self.A_T * dTdz_i)
+
+###################################################################
             # Average vapour temperature
             Tv_avg.append(simpson(T_v, x = self.z_grid))
 
