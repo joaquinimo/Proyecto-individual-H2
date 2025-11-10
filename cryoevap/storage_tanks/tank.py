@@ -108,7 +108,7 @@ class Tank:
         dz = self.z_grid[1] - self.z_grid[0]
 
         # Robin BC initial condition
-        Tv_0[-1] = ((2 * self.U_roof * (1-self.eta_w) * dz * self.T_air/self.cryogen.k_V_avg +
+        Tv_0[-1] = ((2 * self.U_roof * (1-self.eta_w) * dz * self.T_air/self.cryogen.k_V_nuevo +
                     4 * Tv_0[-2] - Tv_0[-3])/(3 + 2 * self.U_roof * (1-self.eta_w) * dz * self.cryogen.k_V_nuevo)) #### cambiar ####
 
         # Concatenate initial conditions in a single vector
