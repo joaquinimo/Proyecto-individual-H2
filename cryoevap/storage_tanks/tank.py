@@ -109,7 +109,7 @@ class Tank:
 
         # Robin BC initial condition
         Tv_0[-1] = ((2 * self.U_roof * (1-self.eta_w) * dz * self.T_air/self.cryogen.k_V_avg +
-                    4 * Tv_0[-2] - Tv_0[-3])/(3 + 2 * self.U_roof * (1-self.eta_w) * dz * self.cryogen.k_V_avg)) #### cambiar ####
+                    4 * Tv_0[-2] - Tv_0[-3])/(3 + 2 * self.U_roof * (1-self.eta_w) * dz * self.cryogen.k_V_nuevo)) #### cambiar ####
 
         # Concatenate initial conditions in a single vector
         IC = np.append(VL_0, Tv_0)
@@ -287,8 +287,24 @@ class Tank:
         dz = (self.z_grid[1] - self.z_grid[0])*self.l_V
         dTdz_i = (-3 * T_V[0] + 4 * T_V[1] - T_V[2])/(2*dz)
         
-        return self.cryogen.k_V_nuevo * self.A_T * dTdz_i
-    
+        #return self.cryogen.k_V_nuevo * self.A_T * dTdz_i
+    ###############################################################
+        k_val = self.cryogen.k_V_nuevo 
+
+        # Si es un array, tomar solo el primer elemento (el de la interfaz z=0)
+        if isinstance(k_val, np.ndarray):
+            k_interface = k_val[0]
+        else:
+            k_interface = k_val # Sigue siendo un escalar
+
+        # k_interface es ahora garantizadamente un escalar
+        return k_interface * self.A_T * dTdz_i
+
+
+
+
+
+    ###############################################################
     # Plotting routines
     def plot_tv(self, t_unit='s'):
         '''
