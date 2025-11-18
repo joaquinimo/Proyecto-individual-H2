@@ -33,7 +33,7 @@ class Tank:
         self.cryogen = Cryogen()  # Empty Cryogen, see Cryogen class
 
         # Simulation control
-        #self.constant_thermalconduct  = 'True'                  ## que sea el switch de un True/False otra inicialización 
+                     
         # Initialise dimensionless grid with 100 nodes as default
         self.z_grid = np.linspace(0, 1, 100)
 
@@ -51,7 +51,7 @@ class Tank:
                     'k_V_vector': []}
         pass
 
-    def set_HeatTransProps(self, U_L, U_V, T_air, Q_b_fixed=None, Q_roof=0, eta_w = 0, k_V_avg = True):
+    def set_HeatTransProps(self, U_L, U_V, T_air, Q_b_fixed=None, Q_roof=0, eta_w = 0, k_V_avg = True): # Definition of k_V average or k_V variable
         """Set separately tank heat transfer properties
         
         Inputs:
@@ -176,11 +176,8 @@ class Tank:
         # Interface velocity
         v_int = v_z * (self.cryogen.rho_V_avg/self.cryogen.rho_L)
 
-######################################################################################
         # Vapour thermal diffusivity 
-        #  AHORA ALFA NO CORRESPONDE A ESTO DADO K_V(T) y nuevo despeje
-        #alpha = self.cryogen.k_V_avg/(self.cryogen.rho_V_avg*self.cryogen.cp_V_avg) 
-######################################################################################
+        alpha = self.cryogen.k_V_avg/(self.cryogen.rho_V_avg*self.cryogen.cp_V_avg) 
 
         # Uniform spacing
         dz = (self.z_grid[1] - self.z_grid[0])*L_dry
@@ -191,23 +188,16 @@ class Tank:
         # Initialise temperature change vector
         dT = np.zeros(n) 
 
-######################################################################################
-        #NUEVO K_V DADO CRYOGEN.PY 
-        k_nuevo = self.k_V # casi lo mismo que cryogen con el nuevo kv que considera cada término 
-######################################################################################
-
+        # k_V vector variable or not if its average, its a vector with te same number, the average
+        k_nuevo = self.k_V 
 
         # Compute the differences
         dT_dz = (T[1:-1] - T[:-2]) / dz
 
+        dk_dz = (k_nuevo[1:-1] - k_nuevo[:-2]) / dz
+
         # Compute the second derivatives
         d2T_dz2 = (T[:-2] - 2*T[1:-1] + T[2:]) / dz**2
-
-######################################################################################
-        #aqui agregó las derivadas similares para k_v como las de dtdz
-        dk_dz = (k_nuevo[1:-1] - k_nuevo[:-2]) / dz
-#####################################################################################
-
 
 
         # Compute the wall heating considering the wall heat partitioning.
@@ -216,24 +206,12 @@ class Tank:
         S_wall = (4*self.U_V*self.d_o/self.d_i**2) * (self.T_air - T[1:-1]) * (1-self.eta_w)
 
 
-######################################################################################
-
-        # alfa nuevo "" solo para los promedios de las que no cambian
-        alpha_nuevo = 1/(self.cryogen.rho_V_avg*self.cryogen.cp_V_avg)
-
-        dT[1:-1] = alpha_nuevo * (k_nuevo[1:-1] * d2T_dz2) - (v_z-v_int)* dT_dz + alpha_nuevo* (dk_dz * dT_dz) + alpha_nuevo * S_wall 
-        #1term termino de la derivada de kv * dtdz #2term prveniente del otro lado #3term expansión de la dkdt ## smiliar a como estaba antes pero agregando k variable
-          
-        #antigua ecuación para comparar, de igual manera la dejé en donde estaba más abajo como parte del original
-        #dT[1:-1] = alpha*d2T_dz2 - (v_z-v_int) * dT_dz + (alpha/self.cryogen.k_V_avg) * S_wall
-
-######################################################################################
-
-
-
+        # Beta parameter
+        Beta = 1/(self.cryogen.rho_V_avg*self.cryogen.cp_V_avg)
 
         # Update dT
-        #dT[1:-1] = alpha*d2T_dz2 - (v_z-v_int) * dT_dz + (alpha/self.cryogen.k_V_avg) * S_wall
+        dT[1:-1] = Beta * (k_nuevo[1:-1] * d2T_dz2) - (v_z-v_int)* dT_dz + Beta* (dk_dz * dT_dz) + Beta * S_wall 
+
 
         # DIFFERENTIAL BOUNDARY CONDITIONS
         # In the vapour-liquid interface the
@@ -289,9 +267,6 @@ class Tank:
         dTdz_i = (-3 * T_V[0] + 4 * T_V[1] - T_V[2])/(2*dz)
         
         return self.k_V[0] * self.A_T * dTdz_i
-
-
-
 
 
     # Plotting routines
@@ -411,7 +386,7 @@ class Tank:
             # Calculate and append Q_VL
 
             # Update vapour thermal conductivity
-            self.cryogen.update_k_V(self.z_grid, T_v) #####################
+            self.cryogen.update_k_V(self.z_grid, T_v)
             
             # Calculate vapour temperature gradient from the vapour length
             # at the desired timestep
@@ -419,7 +394,7 @@ class Tank:
             dTdz_i = (-3 * T_v[0] + 4 * T_v[1] - T_v[2])/(2*dz)    
             
             # Append Q_VL calculated using the Fourier's law
-            Q_VL.append(self.k_V[0] * self.A_T * dTdz_i) ##############
+            Q_VL.append(self.k_V[0] * self.A_T * dTdz_i)
 
             # Average vapour temperature
             Tv_avg.append(simpson(T_v, x = self.z_grid))
@@ -573,10 +548,11 @@ class Tank:
         of rapid vapour heating'''
         return 2 * self.l_V/self.v_z
     
+    # New property for the switch creation, k_V average or k_V variable
     @property
     def k_V(self):
         if self.k_V_avg:
-            "If Q_b_fixed is not set, calculate"
+            "If K_v True takes k_V average"
             return np.ones(len(self.z_grid)) * self.cryogen.k_V_avg
         else:
-            return self.cryogen.k_V_nuevo
+            return self.cryogen.k_V_var

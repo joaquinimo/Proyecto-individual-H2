@@ -43,7 +43,8 @@ class Cryogen:
         self.k_int = k_V  # Thermal conductivity at the vapour-liquid interface
         self.cp_V = cp_V  # Heat capacity at constant pressure / J/kg/K
         self.MW = MW
-        self.k_V_nuevo = k_V
+        self.k_V_var = k_V
+        
     def rho_ig(self, T=None, P=None):
         """Returns ideal gas density in kg/m^3"""
         if P is None:  # Don't ask for P on isobaric conditions
@@ -82,7 +83,7 @@ class Cryogen:
         self.h_V = CP.PropsSI('H','P',p,'Q',1,fluid)  # Vapour enthalpy J/kg
         self.k_V = CP.PropsSI('L','P',p,'Q',1,fluid)  # Thermal conductivity of the vapour W/mK
         self.k_int = self.k_V  # Thermal conductivity at the vapour-liquid interface
-        self.k_V_nuevo = self.k_V # Initialise average thermal conductivity
+        self.k_V_var = self.k_V # Initialise average thermal conductivity
         self.k_V_avg = self.k_V # Initialise average thermal conductivity
 
         self.cp_V = CP.PropsSI('C','P',p,'Q',1,fluid)  # Heat capacity at constant pressure / J/kg/K
@@ -130,7 +131,7 @@ class Cryogen:
 
         # Shift temperature 1e-3 K to avoid CoolProp non convergence
         T_V_shift = np.copy(T_V)
-        T_V_shift = T_V_shift + 1e-3 ###
+        T_V_shift = T_V_shift + 1e-3 
 
         k_V = CP.PropsSI('L','P',self.P,'T',T_V_shift, self.name)
         
@@ -139,15 +140,13 @@ class Cryogen:
             return
 
 
-        # Update average conductividad (?)
+        # Update average and variable k_V
         
-        self.k_V_avg = simpson(k_V, x = z_grid)
+        self.k_V_avg = simpson(k_V, x = z_grid) # Average
     
-        ##################
+        self.k_V_var = k_V # Variable
 
-        self.k_V_nuevo = k_V
-
-        ##################
+   
 
     def update_cp_V(self, z_grid, T_V):
         '''
