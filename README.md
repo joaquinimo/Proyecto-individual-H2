@@ -97,9 +97,9 @@ Q_VL.append(self.k_V[0] * self.A_T * dTdz_i)
 ```
 #### In the code (class cryogen.py):
 ```python
-self.k_V_var = k_V is defined to store all the vector of $k_V$ values.
+self.k_V_var = k_V #is defined to store all the vector of $k_V$ values.
 
-self.k_V_var = k_V is define in the  def init - """Constructor"""
+self.k_V_var = k_V #is define in the  def init - """Constructor"""
 ```
 #### For the creation of the switch (class tank.py):
 
