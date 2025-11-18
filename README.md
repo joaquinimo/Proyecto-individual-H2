@@ -31,39 +31,40 @@ This update replaces the constant $k_{v,avg}$ approximation in CryoEvap with a $
 #### In the code (class tank.py):
 
 Previous Implementation update dT (Constant $k_{v,avg}$):
-
+```python
 dT[1:-1] = alpha*d2T_dz2 - (v_z-v_int) * dT_dz + (alpha/self.cryogen.k_V_avg) * S_wall
-
+```
 Updated Implementation (Variable $k_v(z)$):
-
+```python
 dT[1:-1] = Beta * (k_nuevo[1:-1] * d2T_dz2) - (v_z-v_int)* dT_dz + Beta* (dk_dz * dT_dz) + Beta * S_wall 
-
+```
 And the compute the difference for dk_dz:
-
+```python
 dk_dz = (k_nuevo[1:-1] - k_nuevo[:-2]) / dz
-
+```
 
 Previous alpha:
-
+```python
 alpha = self.cryogen.k_V_avg/(self.cryogen.rho_V_avg*self.cryogen.cp_V_avg) 
-
+```
 Updated "alpha" rename to Beta:
-
+```python
 Beta = 1/(self.cryogen.rho_V_avg*self.cryogen.cp_V_avg)
-
+```
 
 Updated the temperature shift logic so the $+1e^{-3}$ K offset is now applied globally to the whole T_V array (instead of just the first node) to avoid CoolProp convergence errors. The code:
-
-Shift temperature 1e-3 K to avoid CoolProp non convergence
+```python
+#Shift temperature 1e-3 K to avoid CoolProp non convergence
         T_V_shift = np.copy(T_V)
         T_V_shift = T_V_shift + 1e-3
-
+```
 
 Robin BC initial condition changes instead k_V average - self.k_V and the correct value for the BC
 
 Changes in def Q_VL where k_V updated:
 
 The new version:
+```python
     def Q_VL(self, T_V):
         '''
         Calculate vapour to liquid heat transfer rate
@@ -75,8 +76,9 @@ The new version:
         dTdz_i = (-3 * T_V[0] + 4 * T_V[1] - T_V[2])/(2*dz)
         
         return self.k_V[0] * self.A_T * dTdz_i
-
+```
 The old version:
+```python
     def Q_VL(self, T_V):
         '''
         Calculate vapour to liquid heat transfer rate
@@ -88,21 +90,21 @@ The old version:
         dTdz_i = (-3 * T_V[0] + 4 * T_V[1] - T_V[2])/(2*dz)
         
         return self.cryogen.k_V_avg * self.A_T * dTdz_i
-
+```
 Changes in def _reconstruct(self), updated k_V:
-
+```python
 Q_VL.append(self.k_V[0] * self.A_T * dTdz_i)
-
+```
 #### In the code (class cryogen.py):
-
+```python
 self.k_V_var = k_V is defined to store all the vector of $k_V$ values.
 
 self.k_V_var = k_V is define in the  def init - """Constructor"""
-
+```
 #### For the creation of the switch (class tank.py):
 
 Creation of a new property: This property was defined to ensure that the dT equation remains valid/compatible for both scenarios. 1 the constant average $k_V$ and 2 the variable $k_V$.
-
+```python
     # New property for the switch creation, k_V average or k_V variable
 @property
 def k_V(self):
@@ -111,11 +113,11 @@ def k_V(self):
         return np.ones(len(self.z_grid)) * self.cryogen.k_V_avg
     else:
         return self.cryogen.k_V_var
-
+```
 New entrance for the function:
-
+```python
 def set_HeatTransProps(self, U_L, U_V, T_air, Q_b_fixed=None, Q_roof=0, eta_w = 0, k_V_avg = True):
-
+```
 If true, uses k_V_avg. If false, uses the all vector k_V
 
 
