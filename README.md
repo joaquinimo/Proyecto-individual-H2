@@ -188,6 +188,9 @@ plt.show()
 ```
 #### Errors
 
+To quantify the numerical differences between the two models, the simulation is executed two times. First, the code is run with k_V_avg="False" and the resulting data vectors are saved. Then the simulation is repeated using k_V_avg="True". Finally, the discrepancy between the two datas is evaluated by calculating the Root Mean Square Error and the Mean Absolute Error.
+
+
 ```python
 #Save data with k_V_avg = 'True'
 BOG_avg = np.copy(mid_tank.data['BOG'])
