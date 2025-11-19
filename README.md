@@ -8,18 +8,6 @@ A Python software for the simulation of the evaporation of cryogenic liquids in 
 * Matplotlib >= 3.8.0
 * Jupyter >= 1.0.0
 
-The software requires Python 3 and it has been tested on Windows and Linux. The most straightforward way to install Python 3 is through Anaconda. The required modules are Matplotlib, NumPy, SciPy and CoolProp. They can be installed using a package manager such as conda or pip. In a system terminal with pip and python added to the path, the packages can be installed typing pip install matplotlib numpy scipy coolprop --upgrade. To take advantage of CryoEvap interactivity, it is suggested to use Jupyter Notebook as the integrated development environment (IDE). 
-
-Once all the prerequisites are satisfied, the source code can be obtained from the GitHub repository by cloning the repository branch with the command 
-
-`git clone https://github.com/felipehuerta17/CryoEvap.git`
-
-To install CryoEvap, open Anaconda Prompt (on Windows) or Terminal (on Linux/Mac) and navigate to the path where the CryoEvap folder is located. If the repository was cloned, type cd /path/CryoEvap. If the compressed file was downloaded, the directory will be /path/CryoEvap-1.0.0. From this folder, install the package typing in the terminal 
-
-`pip install .`
-
-A successful installation will show in the terminal the message “Successfully installed cryoevap”.
-
 ### How to use CryoEvap
 
 The workflow of CryoEvap is divided in five steps: module import, tank initialisation, cryogen initialisation, simulation setup and visualisation. The following code snippet illustrates the minimum code necessary to simulate the evaporation of LN2 in a lab-scale storage tank, and it can be used as a template for any scenario.  In step 1, NumPy and Matplotlib are imported to directly visualise the results in the notebook. Additionally, the CryoEvap Tank and Cryogen classes are imported, as they act as an interface for all simulation functionalities. In step 2, the geometrical and heat transfer properties of the tank are defined, as well as the operating pressure and initial liquid filling. In step 3, the cryogen is first initialised with its name and then their properties at the operating pressure are set. In step 4, the grid spacing is set to calculate the number of nodes in the vertical direction, z, and then this value is set as a tank property. The overall roof heat transfer coefficient is also set to illustrate that tank properties can be modified after the tank is constructed. The time_interval property establishes the time-step at which simulation data will be recorded for post-processing. The plot_interval property defines the interval at which vapour temperatures will be plotted. Step 4 ends with the function evaporate, which receives the simulation time and performs the simulation. Finally, Step 5 illustrates the syntax to produce the figures that summarise the results. The parameters t_unit and unit allow the user to control the units of time and the corresponding dependent variables to improve visualisations. Further examples that set up the scenarios and perform the simulations can be found in the Jupyter Notebooks located in the /notebooks folder of CryoEvap GitHub repository.
@@ -27,6 +15,8 @@ The workflow of CryoEvap is divided in five steps: module import, tank initialis
 ### What's new in this version
 
 This update replaces the constant $k_{v,avg}$ approximation in CryoEvap with a $z$-dependent variable, requiring modifications to the governing equation for the time step ($dT$) and the boundary conditions that previously relied on average values. A new parameter, $\beta$, was introduced to replace $\alpha$, as the variable model no longer utilizes average $k_{v,avg}$. Furthermore, a switch was implemented in the function mid_tank.set_HeatTransProps(..., k_V_avg=False), allowing users to toggle between the average approximation and the variable model by simply setting the boolean flag, facilitating a direct comparison between the two approaches.
+
+As a first conclusion, there is no difference between both models, which can be observed in the Methane_mid.ipynb file. This verifies that the model assumptions are congruent with what was expected.This confirms the limited contribution of vapor to the BOG.
 
 ### For more details and test de code go to Methane_mid.ipynb in -> test.
 
