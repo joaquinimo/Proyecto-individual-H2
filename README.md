@@ -28,6 +28,8 @@ The workflow of CryoEvap is divided in five steps: module import, tank initialis
 
 This update replaces the constant $k_{v,avg}$ approximation in CryoEvap with a $z$-dependent variable, requiring modifications to the governing equation for the time step ($dT$) and the boundary conditions that previously relied on average values. A new parameter, $\beta$, was introduced to replace $\alpha$, as the variable model no longer utilizes average $k_{v,avg}$. Furthermore, a switch was implemented in the function mid_tank.set_HeatTransProps(..., k_V_avg=False), allowing users to toggle between the average approximation and the variable model by simply setting the boolean flag, facilitating a direct comparison between the two approaches.
 
+### For more details and test de code go to Methane_mid.ipynb in -> test.
+
 #### In the code (class tank.py):
 
 Previous Implementation update dT (Constant $k_{v,avg}$):
