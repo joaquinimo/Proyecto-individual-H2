@@ -15,7 +15,7 @@ The workflow of CryoEvap is divided in five steps: module import, tank initialis
 
 ### What's new in this version
 
-This update replaces the constant $k_{v,avg}$ approximation in CryoEvap with a $z$-dependent variable, requiring modifications to the governing equation for the time step ($dT$) and the boundary conditions that previously relied on average values. A new parameter, $\beta$, was introduced to replace $\alpha$, as the variable model no longer utilizes average $k_{v,avg}$. Furthermore, a switch was implemented in the function mid_tank.set_HeatTransProps(..., k_V_avg=False), allowing users to toggle between the average approximation and the variable model by simply setting the boolean flag, facilitating a direct comparison between the two approaches.
+This update replaces the constant $k_V_avg$ approximation in CryoEvap with a $z$-dependent variable, requiring modifications to the governing equation for the time step ($dT$) and the boundary conditions that previously relied on average values. A new parameter, $\beta$, was introduced to replace $\alpha$, as the variable model no longer utilizes average $k_V_avg$. Furthermore, a switch was implemented in the function mid_tank.set_HeatTransProps(..., k_V_avg=False), allowing users to toggle between the average approximation and the variable model by simply setting the boolean flag, facilitating a direct comparison between the two approaches.
 
 As a first conclusion, there is no difference between both models, which can be observed in the Methane_mid.ipynb file. This verifies that the model assumptions are congruent with what was expected.This confirms the limited contribution of vapor to the BOG.
 
