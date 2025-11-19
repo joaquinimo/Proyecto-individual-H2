@@ -222,3 +222,31 @@ print(f"Error T_BOG")
 print(f"Root Mean Square Error: {Erqm_T_BOG:.2e}")
 print(f"Mean Absolute Error: {Mae_T_BOG:.2e}")
 ```
+
+### Aplication in Chile
+Chile posee grandes fuentes de energías renovables como la eólica o la solar (Bartlett, 2022). Esta es sumamente importante para la realización de proyectos de hidrógeno verde o amoníaco verde (Yu et al., s/f), puesto que necesita de energías renovables, además el amoníaco permite almacenar 68.7% más de hidrógeno masa por volumen que el mismo hidrógeno líquido que se encuentra a temperaturas criogénicas (Yu et al., s/f).
+
+A esto, se le suma que Chile busca aumentar este tipo de proyectos como el de San Gregorio en Punta Arenas con una inversión de 11 billones de dólares, que busca instalar una planta de HNH (H2LAC, s/f). Para el transporte de estos, que se realiza en tanques hay que cuidar el BOG boil off gas, que se traduce en una pérdida de material y peligros (Huerta & Vesovic, 2019). Es por esto que tener certeza de la cantidad de BOG existente es que el código contribuirá a esta aplicación para dar certeza a los supuestos tomados sobre la contribución de ciertos parámetros al BOG como lo era el uso de la conductividad promedio del vapor en el tanque.
+
+
+### Impact evaluation
+
+En Chile como se mencionó anteriormente, se inyecta dinero por esta inversión que traera consigo empleos y desarrollo social a la comuna en que se realice, en el caso de la planta mencionada, a la zona de San Gregorio, Punta Arenas (H2LAC, s/f). Además, este tipo de proyectos impacta de manera positiva puesto que posiciona al país como un referente en la innovación y energía limpia (H2LAC, s/f). Ahora bien, la implementación del código traera certezas ante el uso de tanques para almacenar este hidrogeno verde, por lo que habrá seguridad en la estimación de BOG que puede traducirse como perdida de material y perdida economica, y la correcta estimación de esta podrá servir para seguir minimizando este suceso.
+
+
+### Proyection in Chile
+
+Chile es un país con altas capacidades en energías renovables (Bartlett, 2022). Tal como se mencionó, la producción de hidrógeno verde necesita este tipo de energías para poder llamarse de esta manera, además existen proyectos e intención de traer inversores al país en este tipo de materia (Yu et al., s/f). Por lo que, Chile parece ser idoneo para el desarrollo de estas tecnologías y como reflexión personal, se debe seguir incentivando este tipo de proyectos para aprovechar esta ventaja en fuentes de energías renovables que existe en el país. Esto, además de poder traer energía verde, traera consigo empleos y desarrollo social en las zonas en donde se instale este tipo de planta, de la misma manera que se preveé con la planta de Punta Arenas (H2LAC, s/f). A esto se le suma la importancia de los modelos como Cryoevap, dado que permite confimar supuestos que se realizan para simplificar la modelación y dar seguridad a su uso para futuras innovaciones en ese aspecto, lo que ayudará a la transcición energética.
+
+
+
+### References
+
+Bartlett, J. (2022). Chile apuesta al hidrogeno verde. Finanzas & Desarrollo. New York, 42-43.
+
+Huerta, F., & Vesovic, V. (2019). A realistic vapour phase heat transfer model for the weathering of LNG stored in large tanks. Energy, 174, 280-291.
+
+H2LAC. "HNH Energy’s green ammonia project enters the environmental process in Chile."
+https://h2lac.org/en/news/hnh-energys-green-ammonia-project-enters-the-environmental-process-in-chile/.
+
+Yu Chen, M. H., Tapia, I., Huerta, F. A. L., & Vesovic, V. The effect of varying ambient temperature on the boil-off gas rates during the isobaric storage of liquid ammonia. Available at SSRN 5555353.
