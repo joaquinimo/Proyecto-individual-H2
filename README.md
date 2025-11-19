@@ -1,6 +1,6 @@
 # CryoEvap 
 
-This Python software simulates the evaporation of cryogenic liquids in storage tanks. Developed as a project for "HYDROGEN PROCESSING FOR SUSTAINABLE ENERGY", it introduces a modification to the vapor thermal conductivity ($k_v$), implementing a variable model instead of the previously used average value.
+This Python software simulates the evaporation of cryogenic liquids in storage tanks. Developed as a project for "HYDROGEN PROCESSING FOR SUSTAINABLE ENERGY", it introduces a modification to the vapor thermal conductivity ($k_V$), implementing a variable model instead of the previously used average value.
 
 ### Requirements
 
