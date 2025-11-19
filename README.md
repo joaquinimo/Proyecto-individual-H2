@@ -183,4 +183,46 @@ mid_tank.plot_Q(unit = 'W', t_unit = 'h')
 mid_tank.plot_V_L(t_unit='h') # Liquid volume
 mid_tank.plot_BOG(unit='kg/h', t_unit='h') # Boil-off gas and evaporation rates
 mid_tank.plot_tv_BOG(t_unit='min') # Plot average vapour and boil-off gas temperature
+
+plt.show()
+```
+#### Errors
+
+```python
+#Save data with k_V_avg = 'True'
+BOG_avg = np.copy(mid_tank.data['BOG'])
+T_v_avg = np.copy(mid_tank.data['Tv_avg'])
+T_BOG_avg = np.copy(mid_tank.data['T_BOG'])
+```
+
+```python
+#Rerun code with k_V_avg = 'False'
+BOG_var = np.copy(mid_tank.data['BOG'])
+T_v_var = np.copy(mid_tank.data['Tv_avg'])
+T_BOG_var = np.copy(mid_tank.data['T_BOG'])
+```
+
+```python
+#Errors MAE and RMSE
+Erqm_BOG = np.sqrt(np.mean((BOG_var - BOG_avg)**2))
+Mae_BOG = np.mean(np.abs(BOG_var - BOG_avg))
+
+Erqm_T_v = np.sqrt(np.mean((T_v_var - T_v_avg)**2))
+Mae_T_v = np.mean(np.abs(T_v_var - T_v_avg))
+
+Erqm_T_BOG = np.sqrt(np.mean((T_BOG_var - T_BOG_avg)**2))
+Mae_T_BOG = np.mean(np.abs(T_BOG_var - T_BOG_avg))
+```
+
+```python
+#Prints
+print(f"Error BOG")
+print(f"Root Mean Square Error: {Erqm_BOG:.2e}")
+print(f"Mean Absolute Error: {Mae_BOG:.2e}")
+print(f"Error Tv")
+print(f"Root Mean Square Error: {Erqm_T_v:.2e}")
+print(f"Mean Absolute Error: {Mae_T_v:.2e}")
+print(f"Error T_BOG")
+print(f"Root Mean Square Error: {Erqm_T_BOG:.2e}")
+print(f"Mean Absolute Error: {Mae_T_BOG:.2e}")
 ```
